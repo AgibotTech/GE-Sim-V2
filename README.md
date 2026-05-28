@@ -36,7 +36,7 @@ teleoperation, on-robot policy deployment, and rich object interaction. </em></p
 
 ## TODO
 
-- [x] Release arXiv preprint
+- [x] Release technical report
 - [ ] Release code
 - [ ] Release model weights
 - [ ] Release evaluation toolkit
