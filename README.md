@@ -31,7 +31,7 @@ teleoperation, on-robot policy deployment, and rich object interaction. </em></p
 
 - [2026.05.28] 📄 The technical report [GE-Sim 2.0: A Roadmap Towards Comprehensive Closed-loop Video World Simulators for Robotic Manipulation](https://arxiv.org/abs/2605.27491) has been released on arXiv.
 
-- [2026.05.26] 🌐 The [project page](https://ge-sim-v2.github.io/) of GE-Sim 2.0 has been released.
+- [2026.04.10] 🌐 The [project page](https://ge-sim-v2.github.io/) of GE-Sim 2.0 has been released.
 
 
 ## TODO
