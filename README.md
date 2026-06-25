@@ -89,9 +89,7 @@ against the task to produce per-frame success and progress. -->
 
 Action conditioning renders the trajectory band from policy actions via forward
 kinematics. The Genie-01 (G01) robot kinematics ship as a compiled FK library
-inside the package (`gesim/conditioning/_g01_fk.so`) — no robot description
-(URDF/geometry) is published — so closed loop runs with no extra setup (see
-docs/closed_loop.md).
+inside the package (`gesim/conditioning/_g01_fk.so`).
 
 ```python
 from gesim import WorldModelEnv
