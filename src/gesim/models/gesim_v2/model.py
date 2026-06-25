@@ -110,6 +110,7 @@ def _expand_checkpoint(config: dict) -> dict:
             cfg.setdefault(key, f"{root}/{name}")
     return cfg
 
+
 # ── Video/model resolution ───────────────────────────────────────────────────
 SAMPLE_H = 384
 SAMPLE_W = 512
@@ -376,7 +377,8 @@ class GeSimV2WorldModel(WorldModel):
                 _pose_missing = [k for k in _missing if any(p in k for p in _pose_prefixes)]
                 logger.info(
                     "PE pose keys loaded: %d, pose keys still missing: %d",
-                    len(_sd), len(_pose_missing),
+                    len(_sd),
+                    len(_pose_missing),
                 )
                 if _pose_missing:
                     logger.info("Still missing: %s ...", _pose_missing[:5])
