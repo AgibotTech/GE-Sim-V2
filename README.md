@@ -2,7 +2,7 @@
 
 <img src="assets/logos/agibot.png" alt="AgiBot" height="48"/>
 
-# GE-Sim 2.0
+# Genie Envisioner World Simulator (GE-Sim 2.0) 
 
 ### A Roadmap Towards Comprehensive Closed-loop Video World Simulators for Robotic Manipulation
 
@@ -26,8 +26,8 @@ manipulation, trained on millions of real-world episodes spanning
 teleoperation, on-robot policy deployment, and rich object interaction. </em></p>
 </div>
 
-> **Released model.** The open-sourced GE-Sim 2.0 weights are trained for the
-> **Genie-01 (G01)** dual-arm robot with the **OmniPicker** gripper. Support for
+> **Released model.** The released GE-Sim 2.0 weight is post-trained and distilled for the
+> **Genie-01 (G01)** wheeled humanoid robot with **OmniPicker** grippers. Support for
 > the **Genie-02 (G02)** robot is on the roadmap.
 
 ---
@@ -109,7 +109,7 @@ env.save_video("rollout.mp4")
 
 `reward` is `None` unless you attach a `RewardClient` via
 `WorldModelEnv(reward=...)`; no reward model is bundled (see
-[docs/adding_rewards.md](docs/adding_rewards.md)).
+[docs/adding_rewards.md](docs/adding_rewards.md)). Feel free to integrate your custom reward model / critic model via this interface.
 
 ## Installation
 
