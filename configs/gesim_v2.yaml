@@ -1,0 +1,26 @@
+# GE Sim V2 world-model configuration.
+#
+# Point `checkpoint` at a single GE Sim V2 checkpoint folder laid out as:
+#   model.safetensors   world model (video backbone + pose expert, merged)
+#   prompt_embeds.pt    unified prompt embeddings
+#   norm_stats.json     joint normalization statistics
+#   vae/  scheduler/    base video components
+# Download from https://huggingface.co/agibot-world/Genie-Envisioner-Sim-v2.0:
+#   huggingface-cli download agibot-world/Genie-Envisioner-Sim-v2.0 \
+#       --include "checkpoints/**" --local-dir .
+#
+# Checkpoint naming: gesim_<channel>_v<version>_<robot+gripper>_<variant>_<size>
+#   gesim_community_v2.0.1_g01op_distill_2B
+#   = community release, v2.0.1, Genie-01 + OmniPicker, distilled, 2B backbone
+checkpoint: checkpoints/gesim_community_v2.0.1_g01op_distill_2B
+
+device: cuda
+dtype: bfloat16
+num_inference_steps: 4
+distilled_sampling: true
+distill_sigma_schedule: [1.0, 0.9375, 0.8333, 0.625]
+
+liger_norm: true
+liger_layernorm: true
+triton_rope: true
+sparge_attention: true

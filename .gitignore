@@ -216,3 +216,25 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---- merged from worldsimapp_opensource ----
+*.py[cod]
+*.egg-info
+.venv/
+outputs/
+*.mp4
+local/
+# internal planning/spec docs (not part of the published package)
+docs/superpowers/
+.spec-workflow/
+.remember/
+# pi05 finetuning + local dev/check scripts (kept on disk, not published)
+openpi_serving/finetune/
+openpi_serving/smoke_load.py
+openpi_serving/parity_check.py
+openpi_serving/sample_obs.py
+openpi_serving/convert_checkpoint.py
+# downloaded model checkpoints (Hugging Face)
+checkpoints/
+# secret-scanner tool (local, not part of the package)
+golddigger-main/

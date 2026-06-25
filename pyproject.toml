@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gesim"
+dynamic = ["version"]
+description = "GE Sim: an action-conditioned world model for robot manipulation"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "requests",
+    "pillow",
+    "opencv-python-headless",
+    "torch>=2.0",
+    "einops",
+    "scipy",
+    "matplotlib",
+    "pyyaml",
+    "huggingface_hub",
+    "pin",
+]
+
+[project.optional-dependencies]
+server = [
+    "diffusers",
+    "transformers",
+    "accelerate",
+    "safetensors",
+    "sentencepiece",
+    "protobuf",
+    "torchvision",
+]
+dev = ["pytest", "ruff"]
+
+[tool.hatch.version]
+path = "src/gesim/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gesim"]
+# Ship the compiled FK library alongside the package.
+artifacts = ["src/gesim/conditioning/_g01_fk.so"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests", "examples"]
+# Vendored / verbatim-moved model math. These files were lifted unchanged from
+# the upstream gesim_v2 codebase and verified byte-identical during the refactor.
+# Reformatting or restyling them risks silently altering numerically-sensitive
+# code, so they are excluded from lint/format. Real bugs (undefined names) were
+# checked separately and none were found.
+extend-exclude = [
+    "src/gesim/models/gesim_v2/networks",
+    "src/gesim/models/gesim_v2/pipelines",
+    "src/gesim/models/gesim_v2/schedulers",
+    "src/gesim/models/gesim_v2/utils",
+    "src/gesim/models/gesim_v2/image_processor.py",
+    "src/gesim/models/gesim_v2/video_processor.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# dashboard.py is a single embedded HTML/CSS/JS template string; line length
+# is not meaningful there.
+"src/gesim/server/dashboard.py" = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
