@@ -11,6 +11,7 @@
   <a href="https://arxiv.org/abs/2605.27491"><img src="https://img.shields.io/badge/arXiv-2605.27491-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white"/></a>
   <a href="https://github.com/AgibotTech/GE-Sim-V2"><img src="https://img.shields.io/badge/Code-Available-2ea44f?style=for-the-badge&logo=github&logoColor=white"/></a>
   <a href="https://huggingface.co/agibot-world/Genie-Envisioner-Sim-v2.0"><img src="https://img.shields.io/badge/Checkpoints-Available-ffcc00?style=for-the-badge&logo=huggingface&logoColor=white"/></a>
+  <a href="assets/wechat_qr.jpg"><img src="https://img.shields.io/badge/WeChat-Contact-07C160?style=for-the-badge&logo=wechat&logoColor=white"/></a>
   <a href="#license"><img src="https://img.shields.io/badge/License-Apache_2.0_%2F_CC_BY--NC--SA_4.0-lightgrey?style=for-the-badge"/></a>
 </p>
 
