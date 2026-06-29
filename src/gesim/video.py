@@ -10,6 +10,18 @@ import numpy as np
 logger = logging.getLogger("gesim.video")
 
 
+def _resolve_ffmpeg() -> str | None:
+    """Return an ffmpeg binary, preferring PATH then optional imageio-ffmpeg."""
+    ffmpeg = shutil.which("ffmpeg")
+    if ffmpeg:
+        return ffmpeg
+    try:
+        import imageio_ffmpeg
+    except ImportError:
+        return None
+    return imageio_ffmpeg.get_ffmpeg_exe()
+
+
 def save_video(frames: np.ndarray, path: str, fps: int = 16):
     """Save ``(T, 3, V, H, W)`` float video to mp4. Views are tiled horizontally."""
     T, C, V, H, W = frames.shape
@@ -22,7 +34,7 @@ def save_video(frames: np.ndarray, path: str, fps: int = 16):
     rows = np.ascontiguousarray(rows)
 
     height, width = rows.shape[1], rows.shape[2]
-    ffmpeg = shutil.which("ffmpeg")
+    ffmpeg = _resolve_ffmpeg()
     if ffmpeg:
         cmd = [
             ffmpeg,
