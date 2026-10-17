@@ -1,0 +1,11 @@
+embodiment: yam
+checkpoint: checkpoints/gesim_community_v2.0.1_yam_2B/model.safetensors
+prompt_embeds: checkpoints/gesim_community_v2.0.1_yam_2B/prompt_embeds.pt
+# Provide this calibration JSON locally; it is not included in the Hugging Face download.
+calibration: calibration/yam/yam_calib_nominal.json
+num_inference_steps: 20
+ray_map_format: plucker
+chunk_size: 25
+n_previous: 4
+seed: 42
+prompt_fps: 30

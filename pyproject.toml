@@ -33,6 +33,7 @@ server = [
     "protobuf",
     "torchvision",
 ]
+worldoracle = ["pyarrow", "diffusers", "transformers", "accelerate", "safetensors", "sentencepiece", "protobuf", "torchvision"]
 dev = ["pytest", "ruff"]
 
 [tool.hatch.version]

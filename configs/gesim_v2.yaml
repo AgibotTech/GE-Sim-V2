@@ -6,12 +6,14 @@
 #   norm_stats.json     joint normalization statistics
 #   vae/  scheduler/    base video components
 # Download from https://huggingface.co/agibot-world/Genie-Envisioner-Sim-v2.0:
-#   huggingface-cli download agibot-world/Genie-Envisioner-Sim-v2.0 \
-#       --include "checkpoints/**" --local-dir .
+#   hf download agibot-world/Genie-Envisioner-Sim-v2.0 \
+#       --include "checkpoints/gesim_community_v2.0.1_g01op_distill_2B/**" --local-dir .
 #
 # Checkpoint naming: gesim_<channel>_v<version>_<robot+gripper>_<variant>_<size>
 #   gesim_community_v2.0.1_g01op_distill_2B
 #   = community release, v2.0.1, Genie-01 + OmniPicker, distilled, 2B backbone
+# Non-DMD G02/YAM checkpoints use configs/worldoracle_*.yaml and
+# scripts/infer_worldoracle.py instead; see docs/worldoracle.md.
 checkpoint: checkpoints/gesim_community_v2.0.1_g01op_distill_2B
 
 device: cuda

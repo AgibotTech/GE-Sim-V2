@@ -1,0 +1,11 @@
+# Video-only teacher checkpoint; independent of the default distilled + PE server.
+embodiment: g02
+checkpoint: checkpoints/gesim_community_v2.0.1_g02_2B/model.safetensors
+prompt_embeds: checkpoints/gesim_community_v2.0.1_g02_2B/prompt_embeds.pt
+num_inference_steps: 20
+ray_map_format: plucker
+chunk_size: 25
+n_previous: 4
+seed: 42
+prompt_fps: 30
+conditioning_version: action-end-v1

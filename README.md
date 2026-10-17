@@ -26,13 +26,14 @@ manipulation, trained on millions of real-world episodes spanning
 teleoperation, on-robot policy deployment, and rich object interaction. </em></p>
 </div>
 
-> **Released model.** The released GE-Sim 2.0 weight is post-trained and distilled for the
-> **Genie-01 (G01)** wheeled humanoid robot with **OmniPicker** grippers. Support for
-> the **Genie-02 (G02)** robot is on the roadmap.
+> **Released models.** GE-Sim 2.0 includes the distilled **Genie-01 (G01) + OmniPicker**
+> simulator and **Genie-02 (G02) + 90D** / **YAM** checkpoints for [WorldOracle evaluation](docs/worldoracle.md).
 
 ---
 
 ## News
+
+- [2026.10.17] 🔥 **Update:** We have updated the [WorldOracle evaluation code](docs/worldoracle.md) and [G02/YAM model weights](https://huggingface.co/agibot-world/Genie-Envisioner-Sim-v2.0).
 
 - [2026.06.25] 💻 The [code](https://github.com/AgibotTech/GE-Sim-V2) and [model weights](https://huggingface.co/agibot-world/Genie-Envisioner-Sim-v2.0) of GE-Sim 2.0 have been released.
 
@@ -46,7 +47,7 @@ teleoperation, on-robot policy deployment, and rich object interaction. </em></p
 - [x] Release technical report
 - [x] Release code
 - [x] Release model weights (Genie-01 / G01)
-- [ ] Release Genie-02 / G02 robot support
+- [x] Release Genie-02 / G02 robot support
 
 ---
 
@@ -125,19 +126,24 @@ pip install -e .             # client only (runs anywhere)
 pip install -e third_party/openpi/packages/openpi-client
 ```
 
-Running the `gesim_v2` world model needs the released checkpoints. Download them
-from [Hugging Face](https://huggingface.co/agibot-world/Genie-Envisioner-Sim-v2.0):
+All model and policy checkpoints share [agibot-world/Genie-Envisioner-Sim-v2.0](https://huggingface.co/agibot-world/Genie-Envisioner-Sim-v2.0).
+
+| Checkpoint under `checkpoints/` | Workflow | Config |
+|---|---|---|
+| `gesim_community_v2.0.1_g01op_distill_2B` | G01 + OmniPicker, distilled 4-step simulator with Pose Expert | `configs/gesim_v2.yaml` |
+| `gesim_community_v2.0.1_g02_2B` | AgiBot Genie-02 / G02, 20-step video-only inference | `configs/worldoracle_g02.yaml` |
+| `gesim_community_v2.0.1_yam_2B` | YAM, 20-step video-only inference | `configs/worldoracle_yam.yaml` |
+| `pi05_gesim_g01op_test` | Demo pi05 policy for the existing G01 simulator | openpi policy serving |
+
+For the existing server/replay/closed-loop examples below, download the distilled simulator and demo policy:
 
 ```bash
-huggingface-cli download agibot-world/Genie-Envisioner-Sim-v2.0 \
-    --include "checkpoints/**" --local-dir .
+hf download agibot-world/Genie-Envisioner-Sim-v2.0 \
+  --include "checkpoints/gesim_community_v2.0.1_g01op_distill_2B/**" \
+            "checkpoints/pi05_gesim_g01op_test/**" --local-dir .
 ```
 
-This fetches the world model (`checkpoints/gesim_community_v2.0.1_g01op_distill_2B`)
-and the pi05 policy (`checkpoints/pi05_gesim_g01op_test`). Set `checkpoint` in
-[`configs/gesim_v2.yaml`](configs/gesim_v2.yaml) to the world-model folder (the
-folder is self-contained). See [`docs/installation.md`](docs/installation.md) for
-accelerated-kernel builds and checkpoint details.
+`configs/gesim_v2.yaml` continues to use the self-contained distilled folder. For the new G02/YAM checkpoints, follow [WorldOracle inference](docs/worldoracle.md): install the `worldoracle` extra and use `scripts/infer_worldoracle.py` with the matching profile. These video-only folders use different conditioning and are not drop-in replacements for the existing server loader. See [installation](docs/installation.md) for both workflows.
 
 ## Running
 

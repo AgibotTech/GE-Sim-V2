@@ -84,8 +84,9 @@ The released checkpoints live on Hugging Face at
 [`agibot-world/Genie-Envisioner-Sim-v2.0`](https://huggingface.co/agibot-world/Genie-Envisioner-Sim-v2.0):
 
 ```bash
-huggingface-cli download agibot-world/Genie-Envisioner-Sim-v2.0 \
-    --include "checkpoints/**" --local-dir .
+hf download agibot-world/Genie-Envisioner-Sim-v2.0 \
+    --include "checkpoints/gesim_community_v2.0.1_g01op_distill_2B/**" \
+              "checkpoints/pi05_gesim_g01op_test/**" --local-dir .
 ```
 
 That fetches `checkpoints/gesim_community_v2.0.1_g01op_distill_2B` (the world
@@ -104,6 +105,15 @@ checkpoint is named
 `gesim_<channel>_v<version>_<robot+gripper>_<variant>_<size>` (e.g.
 `gesim_community_v2.0.1_g01op_distill_2B` = community release v2.0.1, Genie-01 +
 OmniPicker, distilled, 2B backbone) so different releases stay unambiguous.
+
+## G02 and YAM checkpoints
+
+The same Hugging Face repository also provides `gesim_community_v2.0.1_g02_2B`
+and `gesim_community_v2.0.1_yam_2B`, each containing `model.safetensors`.
+Use `configs/worldoracle_g02.yaml` or `configs/worldoracle_yam.yaml` with
+`scripts/infer_worldoracle.py`. These video-only models use 20 steps and a
+separate offline workflow. See [WorldOracle inference](worldoracle.md) for the
+download and inference commands.
 
 ## Closed-loop robot model
 
