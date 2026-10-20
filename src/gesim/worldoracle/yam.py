@@ -18,22 +18,33 @@ Calibration file (``yam_calib.json``, ~600 B per episode): per episode ``band`` 
 content rows), ``top`` (``pose`` = rotvec+t of world_T_top, ``f``, ``c`` in the full 224x224
 frame), ``left_wrist``/``right_wrist`` (``X`` = rotvec+t of flange_T_cam, ``f``).
 """
+
 from __future__ import annotations
 
 import json
-import os
 from functools import lru_cache
 
 import numpy as np
 from scipy.spatial.transform import Rotation as Rot
 
-YAM_CAMS = ("observation.images.top", "observation.images.left_wrist", "observation.images.right_wrist")
-YAM_CAM_SHORT = {"observation.images.top": "top", "observation.images.left_wrist": "left_wrist",
-                 "observation.images.right_wrist": "right_wrist"}
+YAM_CAMS = (
+    "observation.images.top",
+    "observation.images.left_wrist",
+    "observation.images.right_wrist",
+)
+YAM_CAM_SHORT = {
+    "observation.images.top": "top",
+    "observation.images.left_wrist": "left_wrist",
+    "observation.images.right_wrist": "right_wrist",
+}
 
 # ── I2RT yam.urdf (i2rt/robot_models/arm/yam/v1) joint chain: (origin xyz, origin rpy, axis) ──
 _YAM_JOINTS = [
-    ([-2.49777947129965e-07, -9.17402363407408e-13, 0.0679999999995413], [0, 1.5708, 3.1415963267949], [-1, 0, 0]),
+    (
+        [-2.49777947129965e-07, -9.17402363407408e-13, 0.0679999999995413],
+        [0, 1.5708, 3.1415963267949],
+        [-1, 0, 0],
+    ),
     ([-0.0455, -0.0339, -0.02], [0, 0, -3.14159], [0, 1, 0]),
     ([4.08431e-07, -0.0688, 0.264], [0, 0, -3.14159], [0, 1, 0]),
     ([-0.0600003, -0.0688, -0.244999], [0, 0, 0], [0, 1, 0]),
@@ -55,7 +66,7 @@ _AXES = np.stack([np.asarray(a, float) / np.linalg.norm(a) for _, _, a in _YAM_J
 BASE_T_RIGHT = np.eye(4)
 BASE_T_RIGHT[:3, 3] = [-0.004, -0.6065, -0.006]
 EEF_FROM_FLANGE = np.diag([1.0, -1.0, -1.0, 1.0])
-TCP_OFFSET = 0.14465               # along the EEF +Z (approach)
+TCP_OFFSET = 0.14465  # along the EEF +Z (approach)
 TRAJ_RADIUS_DEPTH_RANGE = (0.050, 2.2)
 
 
@@ -88,8 +99,8 @@ def joints_to_eef14(j14):
     out = np.zeros((len(j14), 14), np.float32)
     for k, off in ((0, 0), (1, 7)):
         eef = fl[:, k] @ EEF_FROM_FLANGE
-        out[:, off:off + 3] = eef[:, :3, 3]
-        out[:, off + 3:off + 6] = Rot.from_matrix(eef[:, :3, :3]).as_euler("xyz", degrees=False)
+        out[:, off : off + 3] = eef[:, :3, 3]
+        out[:, off + 3 : off + 6] = Rot.from_matrix(eef[:, :3, :3]).as_euler("xyz", degrees=False)
     out[:, 6] = j14[:, 6]
     out[:, 13] = j14[:, 13]
     return out
@@ -105,7 +116,7 @@ def _se3(p6):
 @lru_cache(maxsize=4)
 def load_yam_calib(path):
     """yam_calib.json -> {episode_index: entry} with matrices unpacked."""
-    with open(path, "r") as f:
+    with open(path) as f:
         raw = json.load(f)
     recs = raw.get("episodes", raw)
     out = {}
@@ -113,9 +124,15 @@ def load_yam_calib(path):
         if not r.get("ok", True) or "top" not in r:
             continue
         top = r["top"]
-        K_top = np.array([[top["f"][0], 0, top["c"][0]], [0, top["f"][1], top["c"][1]], [0, 0, 1.0]])
-        entry = dict(band=(int(r["band"][0]), int(r["band"][1])), world_T_top=_se3(top["pose"]),
-                     K224={"top": K_top}, X={})
+        K_top = np.array(
+            [[top["f"][0], 0, top["c"][0]], [0, top["f"][1], top["c"][1]], [0, 0, 1.0]]
+        )
+        entry = dict(
+            band=(int(r["band"][0]), int(r["band"][1])),
+            world_T_top=_se3(top["pose"]),
+            K224={"top": K_top},
+            X={},
+        )
         for cam in ("left_wrist", "right_wrist"):
             w = r[cam]
             entry["X"][cam] = _se3(w["X"])
@@ -140,8 +157,11 @@ def yam_cameras(entry, cam_names, flanges):
         short = YAM_CAM_SHORT.get(cam, cam)
         Kc = entry["K224"][short].copy()
         if not (np.isfinite(Kc).all() and Kc[0, 0] > 1.0 and Kc[1, 1] > 1.0):
-            raise ValueError(f"YAM calibration for episode {entry.get('ep')} camera {short} has a degenerate "
-                             f"focal ({Kc[0, 0]:.3f}, {Kc[1, 1]:.3f}); regenerate yam_calib.json with merge_calib.py")
+            raise ValueError(
+                f"YAM calibration for episode {entry.get('ep')} camera {short} has a degenerate "
+                f"focal ({Kc[0, 0]:.3f}, {Kc[1, 1]:.3f}); "
+                "regenerate yam_calib.json with merge_calib.py"
+            )
         Kc[1, 2] -= r0
         K.append(Kc)
         if short == "top":
