@@ -99,7 +99,7 @@ DASHBOARD_HTML = """<!doctype html>
   </section>
 
   <section class="panel">
-    <h2>Action vs predicted state &nbsp;<span style="color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400">(commanded action vs world-model prediction, last frame)</span></h2>
+    <h2>Action vs predicted state &nbsp;<span style="color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400">(commanded action vs PE prediction, last frame; grippers in mm)</span></h2>
     <div class="cmp" id="cmp"><div class="empty">waiting for a step…</div></div>
   </section>
 
@@ -117,12 +117,19 @@ function fmtUptime(s) {
 }
 
 const LABELS = ["L1","L2","L3","L4","L5","L6","L7","L grip","R1","R2","R3","R4","R5","R6","R7","R grip"];
+// Match gesim.types GRIPPER_APERTURE_* — WM action grippers are [0,1], PE state is mm.
+const GRIP_MIN = 35, GRIP_SPAN = 120 - 35, GRIP_DIMS = new Set([7, 15]);
+
+function actionForCompare(i, v) {
+  return GRIP_DIMS.has(i) ? v * GRIP_SPAN + GRIP_MIN : v;
+}
 
 function tableFor(title, action, state, lo, hi) {
   let rows = "";
   for (let i = lo; i < hi; i++) {
-    const a = action[i], p = state[i], d = p - a;
-    const cls = Math.abs(d) < 1e-4 ? "" : (d > 0 ? "pos" : "neg");
+    const a = actionForCompare(i, action[i]), p = state[i], d = p - a;
+    const tol = GRIP_DIMS.has(i) ? 2.0 : 1e-4;
+    const cls = Math.abs(d) < tol ? "" : (d > 0 ? "pos" : "neg");
     rows += "<tr><td class='dim'>" + LABELS[i] + "</td><td>" + a.toFixed(3) +
             "</td><td>" + p.toFixed(3) + "</td><td class='" + cls + "'>" +
             (d >= 0 ? "+" : "") + d.toFixed(3) + "</td></tr>";

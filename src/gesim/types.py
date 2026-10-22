@@ -18,6 +18,26 @@ VIEW_NAMES: tuple[str, ...] = ("head", "left_wrist", "right_wrist")
 STATE_DIM = 16
 ACTION_DIM = 16
 
+# Genie-01 OmniPicker: WM actions use normalised gripper commands in [0, 1]; PE
+# state uses physical aperture in mm.  Keep in sync with conditioning/band.py.
+GRIPPER_APERTURE_MIN_MM = 35.0
+GRIPPER_APERTURE_MAX_MM = 120.0
+WM_GRIPPER_DIMS = (7, 15)
+
+
+def wm_action_gripper_to_mm(norm: float) -> float:
+    """Map a normalised WM gripper command to OmniPicker aperture in mm."""
+    span = GRIPPER_APERTURE_MAX_MM - GRIPPER_APERTURE_MIN_MM
+    return float(norm) * span + GRIPPER_APERTURE_MIN_MM
+
+
+def wm_action_row_for_state_compare(action: np.ndarray) -> np.ndarray:
+    """Return a WM action row with gripper channels converted to mm for PE comparison."""
+    out = np.asarray(action, dtype=np.float32).reshape(-1).copy()
+    for dim in WM_GRIPPER_DIMS:
+        out[dim] = wm_action_gripper_to_mm(out[dim])
+    return out
+
 
 @dataclass(frozen=True)
 class Observation:
